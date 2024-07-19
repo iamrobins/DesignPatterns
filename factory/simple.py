@@ -1,17 +1,17 @@
 class EmailNotification:
-    def send(self, message):
+    def send(self, message: str):
         print(f"Sending email: {message}")
 
 class SMSNotification:
-    def send(self, message):
+    def send(self, message: str):
         print(f"Sending SMS: {message}")
 
 class PushNotification:
-    def send(self, message):
+    def send(self, message: str):
         print(f"Sending push notification: {message}")
 
 class NotificationService:
-    def __init__(self, notification_type):
+    def __init__(self, notification_type: str):
         if notification_type == "email":
             self.notification = EmailNotification()
         elif notification_type == "sms":
@@ -21,7 +21,7 @@ class NotificationService:
         else:
             raise ValueError("Unknown notification type")
 
-    def send(self, message):
+    def send(self, message: str):
         self.notification.send(message)
 
 # Client code

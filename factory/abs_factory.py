@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Union
 
 # Abstract Product Interfaces
 class Notification(ABC):
@@ -47,19 +48,19 @@ class AdvancedPopupNotification(AdvancedNotification):
 # Abstract Factory Interface
 class NotificationFactory(ABC):
     @abstractmethod
-    def create_email_notification(self) -> Notification:
+    def create_email_notification(self) -> Union[Notification, AdvancedNotification]:
         pass
 
     @abstractmethod
-    def create_sms_notification(self) -> Notification:
+    def create_sms_notification(self) -> Union[Notification, AdvancedNotification]:
         pass
 
     @abstractmethod
-    def create_push_notification(self) -> Notification:
+    def create_push_notification(self) -> Union[Notification, AdvancedNotification]:
         pass
 
     @abstractmethod
-    def create_popup_notification(self) -> Notification:
+    def create_popup_notification(self) -> Union[Notification, AdvancedNotification]:
         pass
 
 # Concrete Factory Classes for Simple Notifications
