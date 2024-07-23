@@ -1,89 +1,112 @@
 from typing import Any
 from abc import ABC, abstractmethod
 
-class Car:  # Product1
+class Computer:  # Product1
     def __init__(self) -> None:
-        self.parts = []
+        self.parts: list[dict[str, Any]] = []
 
-    def add(self, part: Any) -> None:
+    def add(self, part: dict[str, Any]) -> None:
+        k: str = list(part.keys())[0]
+        v: str = list(part.values())[0]
+        for p in self.parts:
+            if k in p:
+                p[k] = v
+                return
         self.parts.append(part)
 
     def list_parts(self) -> None:
-        print("Car Parts: ", self.parts)
+        print("Computer Parts: ", self.parts)
 
 class Manual:  # Product2
     def __init__(self) -> None:
-        self.parts = []
+        self.parts: list[dict[str, Any]] = []
 
-    def add(self, part: Any) -> None:
+    def add(self, part: dict[str, Any]) -> None:
+        k: str = list(part.keys())[0]
+        v: str = list(part.values())[0]
+        for p in self.parts:
+            if k in p:
+                p[k] = v
+                return
         self.parts.append(part)
 
     def list_parts(self) -> None:
-        print("Car Manual: ", self.parts)
+        print("Computer Manual: ", self.parts)
 
 class Builder(ABC):  # Builder
 
     @abstractmethod
     def reset(self):
         pass
+
     @abstractmethod
-    def setSeats(self, seats):
+    def setCPU(self, cpu: str):
         pass
 
     @abstractmethod
-    def setEngine(self, engine):
+    def setRAM(self, ram: int):
         pass
 
     @abstractmethod
-    def setTripComputer(self, trip_computer):
+    def setStorage(self, storage: str):
         pass
 
     @abstractmethod
-    def setGPS(self, gps):
+    def setGPU(self, gpu: str):
         pass
 
-class CarBuilder(Builder):  # ConcreteBuilder1
+    @abstractmethod
+    def setPowerSupply(self, power_supply: str):
+        pass
+
+class ComputerBuilder(Builder):  # ConcreteBuilder1
     def __init__(self):
         self.reset()
 
     def reset(self):
-        self._car = Car()
+        self._computer = Computer()
 
-    def setSeats(self, seats):
-        self._car.add({"Seat": seats})
+    def setCPU(self, cpu: str):
+        self._computer.add({"CPU": cpu})
 
-    def setEngine(self, engine):
-        self._car.add({"Engine": engine})
+    def setRAM(self, ram: int):
+        self._computer.add({"RAM": ram})
 
-    def setTripComputer(self, trip_computer):
-        self._car.add({"Trip": trip_computer})
+    def setStorage(self, storage: str):
+        self._computer.add({"Storage": storage})
 
-    def setGPS(self, gps):
-        self._car.add({"GPS": gps})
+    def setGPU(self, gpu: str):
+        self._computer.add({"GPU": gpu})
+
+    def setPowerSupply(self, power_supply: str):
+        self._computer.add({"Power Supply": power_supply})
 
     def getProduct(self):
-        product = self._car
+        product = self._computer
         self.reset()
         return product
 
-class CarManualBuilder(Builder):  # ConcreteBuilder2
+class ComputerManualBuilder(Builder):  # ConcreteBuilder2
     def __init__(self):
         self.reset()
 
     def reset(self):
         self._manual = Manual()
 
-    def setSeats(self, seats):
-        self._manual.add({"Seat": seats})
+    def setCPU(self, cpu: str):
+        self._manual.add({"CPU": cpu})
 
-    def setEngine(self, engine):
-        self._manual.add({"Engine": engine})
+    def setRAM(self, ram: int):
+        self._manual.add({"RAM": ram})
 
-    def setTripComputer(self, trip_computer):
-        self._manual.add({"Trip": trip_computer})
+    def setStorage(self, storage: str):
+        self._manual.add({"Storage": storage})
 
-    def setGPS(self, gps):
-        self._manual.add({"GPS": gps})
+    def setGPU(self, gpu: str):
+        self._manual.add({"GPU": gpu})
+
+    def setPowerSupply(self, power_supply: str):
+        self._manual.add({"Power Supply": power_supply})
 
     def getProduct(self):
         product = self._manual
@@ -91,30 +114,44 @@ class CarManualBuilder(Builder):  # ConcreteBuilder2
         return product
 
 class Director:  # Director
-    def constructSportsCar(self, builder):
+    def constructGamingPC(self, builder: Builder):
         builder.reset()
-        builder.setSeats(2)
-        builder.setEngine("SportEngine")
-        builder.setTripComputer(True)
-        builder.setGPS(True)
+        builder.setCPU("High-End CPU")
+        builder.setRAM(32)
+        builder.setStorage("1TB SSD")
+        builder.setGPU("High-End GPU")
+        builder.setPowerSupply("750W")
 
-    def constructSUV(self, builder):
-        pass
+    def constructNormalPC(self, builder: Builder):
+        builder.reset()
+        builder.setCPU("Noraml CPU")
+        builder.setRAM(8)
+        builder.setStorage("256 SSD")
+        builder.setGPU("Integrated GPU")
+        builder.setPowerSupply("550W")
+
+    def constructOfficePC(self, builder: Builder):
+        builder.reset()
+        builder.setCPU("Mid-Range CPU")
+        builder.setRAM(16)
+        builder.setStorage("512GB SSD")
+        builder.setGPU("Integrated GPU")
+        builder.setPowerSupply("500W")
 
 class Application:  # Client
-    def makeCar(self):
+    def makeComputer(self):
         director = Director()
 
-        builder = CarBuilder()  # ConcreteBuilder1
-        director.constructSportsCar(builder)
-        car = builder.getProduct()
-        car.list_parts()
+        builder = ComputerBuilder()  # ConcreteBuilder1
+        director.constructGamingPC(builder)
+        # builder.setRAM(64) # Customisation
+        computer = builder.getProduct()
+        computer.list_parts()
 
-        builder = CarManualBuilder()  # ConcreteBuilder2
-        director.constructSportsCar(builder) # Because we making the manual for sports car
+        builder = ComputerManualBuilder()  # ConcreteBuilder2
+        director.constructGamingPC(builder)  # Because we are making the manual for gaming PC
         manual = builder.getProduct()
         manual.list_parts()
 
-
 app = Application()
-app.makeCar()
+app.makeComputer()
